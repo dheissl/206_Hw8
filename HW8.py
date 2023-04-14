@@ -20,7 +20,7 @@ def load_rest_data(db):
     cur = conn.cursor()
     end = {}
     data = cur.execute("SELECT r.name, c.category, b.building, r.rating FROM restaurants r " + 
-            "JOIN categories c ON r.category_id = c.id " +"JOIN buildings b ON r.building_id = b.id").fetchall()
+            "JOIN categories c ON r.category_id = c.id JOIN buildings b ON r.building_id = b.id").fetchall()
     for rest in data:
         v = {'category': rest[1], 'building': rest[2], 'rating': rest[3]}
         k = rest[0]
@@ -35,7 +35,37 @@ def plot_rest_categories(db):
     restaurant categories and the values should be the number of restaurants in each category. The function should
     also create a bar chart with restaurant categories and the count of number of restaurants in each category.
     """
-    pass
+    fl = os.path.dirname(os.path.abspath(__file__))
+    conn = sqlite3.connect(fl + '/' + db)
+    cur = conn.cursor()
+    end = {}
+    catagoryData = cur.execute("SELECT c.category, count(*) FROM categories c " +
+        "JOIN restaurants r ON r.category_id = c.id GROUP BY c.category").fetchall()
+    
+    for c in catagoryData:
+        v = c[1]
+        k = c[0]
+        end[k] = v
+    conn.close()
+
+    sorted = sorted(end.items(), key=lambda x:x[1])
+    category = []
+    num = []
+    for data in sorted:
+        category.append(data[0])
+        num.append(data[1])
+
+    plt.figure(figsize = (6.5, 5))
+    plt.title("Number of Restaurant Categories")
+    plt.bar(category, num)
+    plt.xlabel("Count")
+    plt.ylabel("Restaurantss")
+    plt.xticks([1,2,3,4])
+    plt.tight_layout()
+
+    plt.savefig('Restaurant Categories Bar Image.png')
+
+    return end
 
 def find_rest_in_building(building_num, db):
     '''
@@ -43,7 +73,19 @@ def find_rest_in_building(building_num, db):
     restaurant names. You need to find all the restaurant names which are in the specific building. The restaurants 
     should be sorted by their rating from highest to lowest.
     '''
-    pass
+    fl = os.path.dirname(os.path.abspath(__file__))
+    conn = sqlite3.connect(fl + '/' + db)
+    cur = conn.cursor()
+    end = []
+
+    data = cur.execute("SELECT r.name, r.rating FROM restaurants r JOIN buildings b ON r.building_id = b.id "
+        + "WHERE b.building = ? ORDER BY r.rating DESC", (building_num, )).fetchall()
+    
+    for name in data:
+        end.append(name[0])
+    conn.close()
+
+    return end
 
 #EXTRA CREDIT
 def get_highest_rating(db): #Do this through DB as well
