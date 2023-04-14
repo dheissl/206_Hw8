@@ -55,13 +55,12 @@ def plot_rest_categories(db):
         category.append(data[0])
         num.append(data[1])
 
-    plt.figure(figsize = (6, 6.5))
+    plt.figure()
     plt.title("Number of Restaurant Categories")
-    plt.bar(category, num)
+    plt.barh(category, num)
     plt.xlabel("Count")
-    plt.ylabel("Restaurantss")
-    plt.yticks([1,2,3,4])
-    plt.xticks(rotation=50, ha='right')
+    plt.ylabel("Restaurants")
+    plt.xticks([1,2,3,4])
     plt.tight_layout()
 
     plt.savefig('Restaurant Categories Bar Image.png')
