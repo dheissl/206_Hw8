@@ -48,19 +48,20 @@ def plot_rest_categories(db):
         end[k] = v
     conn.close()
 
-    sorted = sorted(end.items(), key=lambda x:x[1])
+    sorts = sorted(end.items(), key=lambda x:x[1])
     category = []
     num = []
-    for data in sorted:
+    for data in sorts:
         category.append(data[0])
         num.append(data[1])
 
-    plt.figure(figsize = (6.5, 5))
+    plt.figure(figsize = (6, 6.5))
     plt.title("Number of Restaurant Categories")
     plt.bar(category, num)
     plt.xlabel("Count")
     plt.ylabel("Restaurantss")
-    plt.xticks([1,2,3,4])
+    plt.yticks([1,2,3,4])
+    plt.xticks(rotation=50, ha='right')
     plt.tight_layout()
 
     plt.savefig('Restaurant Categories Bar Image.png')
@@ -79,7 +80,7 @@ def find_rest_in_building(building_num, db):
     end = []
 
     data = cur.execute("SELECT r.name, r.rating FROM restaurants r JOIN buildings b ON r.building_id = b.id "
-        + "WHERE b.building = ? ORDER BY r.rating DESC", (building_num, )).fetchall()
+        + "WHERE b.building = ? ORDER BY r.rating DESC", (building_num,)).fetchall()
     
     for name in data:
         end.append(name[0])
