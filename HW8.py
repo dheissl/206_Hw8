@@ -141,7 +141,7 @@ class TestHW8(unittest.TestCase):
         cat_data = plot_rest_categories('South_U_Restaurants.db')
         self.assertIsInstance(cat_data, dict)
         self.assertEqual(cat_data, self.cat_dict)
-        self.assertEqual(len(cat_data), 14)
+        self.assertEqual(len(cat_data), 14) 
 
     def test_find_rest_in_building(self):
         restaurant_list = find_rest_in_building(1140, 'South_U_Restaurants.db')
